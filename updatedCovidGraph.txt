@@ -1,0 +1,56 @@
+package ComplexScenarios;
+
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class CovidGraph {
+
+	public static void main(String[] args) throws InterruptedException {
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://www.covid19india.org/state/DL");
+		driver.manage().window().maximize();
+		Actions action = new Actions(driver); 
+		 WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(3));
+		int size =0;
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		String circle ="//div[contains(@class,'Up is-confirmed')]  //*[name()='svg'] //*[local-name()='circle']";
+		while (!(size>0)) {
+		
+			js.executeScript("window.scrollBy(0, 10);");
+				
+			List<WebElement> element = driver.findElements(By.xpath("(//*[text()='Recovered'])[3]"));
+			  
+			size=  element.size();
+		}
+		js.executeScript("arguments[0].scrollIntoView();", driver.findElement(By.xpath("(//*[text()='Confirmed'])[3]")));
+  		String start_month = "";
+	   wait.until(ExpectedConditions.elementToBeClickable(By.xpath(circle)));
+
+		while (!start_month.equals("02 August")) {
+			System.out.println(driver.findElement(By.xpath("//div[@class='stats is-confirmed']")).getText());
+			System.out.println("-----------------------------");
+ 			
+			WebElement element = driver.findElement(By.xpath(circle));
+			action.moveToElement(element).moveByOffset(-5, 0).build().perform();
+ 			
+			WebElement month_ele = driver.findElement(By.xpath("//div[@class='stats is-confirmed']/h5[2]"));
+
+			start_month=month_ele.getText();
+		  
+			}
+		System.out.println(driver.findElement(By.xpath("//div[@class='stats is-confirmed']")).getText());
+
+		}  
+			 
+  
+
+}
